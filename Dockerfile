@@ -1,7 +1,7 @@
 FROM ubuntu:14.04
 
-ENV http_proxy=$http_proxy
-ENV https_proxy=$http_proxy
+ARG http_proxy=$http_proxy
+ARG https_proxy=$http_proxy
 
 ENV DEBIAN_FRONTEND noninteractive
 
