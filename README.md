@@ -1,4 +1,4 @@
-# MDS
+# mds
 
 A MDS BMC build code environment.
 
