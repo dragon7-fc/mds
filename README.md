@@ -7,7 +7,7 @@ A MDS BMC build code environment.
 - __Linux__:
 
 ```
-docker run --rm --name mds --net=host -e DISPLAY=10.0 -v $HOME/.Xauthority:/root/.Xauthority dragon7/mds:4.0.1
+docker run --rm --name mds --net=host -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/root/.Xauthority dragon7/mds:4.0.1
 ```
 
 __REFERENCE:__ [微信群分享：Docker運行GUI軟體的方法](https://www.csdn.net/article/2015-07-30/2825340)

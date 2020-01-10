@@ -9,12 +9,15 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get upgrade -y && apt-get install -y supervisor nano xfce4 gnome-icon-theme-full
 
 RUN apt-get install software-properties-common -y
-
 RUN apt-get install -y python-software-properties debconf-utils
-RUN add-apt-repository -y ppa:webupd8team/java
-RUN apt-get update
-RUN echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
-RUN apt-get install -y oracle-java8-installer
+
+ADD jdk-8u131-linux-x64.tar.gz /usr/lib/jvm
+RUN update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.8.0_131/bin/java" 1
+RUN update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk1.8.0_131/bin/javac" 1
+RUN update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/lib/jvm/jdk1.8.0_131/bin/javaws" 1
+RUN update-alternatives --config java
+RUN update-alternatives --config javac
+RUN update-alternatives --config javaws
 
 # Open MDS
 RUN apt-get update   
@@ -53,5 +56,20 @@ RUN apt-get install -y bc
 RUN apt-get install -y libpcre3
 RUN apt-get install -y libpcre3-dev
 
+ENV JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF8"
+
+RUN apt-get install -y autoconf
+ADD ./automake-1.13.4.tar.gz /root
+WORKDIR /root/automake-1.13.4
+RUN ./configure
+RUN make
+RUN make install
+
+RUN apt-get install -y luajit
+
+RUN apt-get install nodejs
+RUN npm i -gq grunt-cli bower coveralls beautifier
+
+WORKDIR /root
 CMD ["MDS"]
 
