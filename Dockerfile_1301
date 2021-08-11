@@ -1,0 +1,118 @@
+FROM ubuntu:18.04
+
+# install GUI component
+RUN apt update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install x-window-system-core
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install gnome-core 
+
+# Java Installation Steps
+RUN apt-get install -y openjdk-8-jdk
+
+# Installing GTK module for ubuntu 18.04
+RUN apt-get install -y libcanberra-gtk-module
+
+# nstalling SPX Related Packages
+RUN apt-get install -y subversion \
+        patch \
+        patchutils \
+        bison \
+        libc6-dev \
+        libxml-dom-perl \
+        zlib1g \
+        zlib1g-dev \
+        libcurl4-openssl-dev \
+        python-numpy \
+        doxygen \
+        python-apt \
+        dmsetup \
+        python-svn \
+        libpcre3-dev \
+        netpbm \
+        sqlite3 \
+        gawk \
+        graphviz \
+        u-boot-tools \
+        automake \
+        pkg-config \
+        libc6-armel-cross \
+        binutils-arm-linux-gnueabi \
+        libncurses5-dev \
+        gcc-arm-linux-gnueabi \
+        g++-arm-linux-gnueabi \
+        flex \
+        lzop \
+        libssl-dev \
+        zlib1g-dev
+
+# To Enabled the 32-bit architecture give the following commands.
+RUN dpkg --add-architecture i386
+RUN apt-get update
+RUN apt-get install -y libc6:i386 \
+        libncurses5:i386 \
+        libstdc++6:i386 \
+        lib32z1 \
+        zlib1g-dev:i386
+
+# Install PHP
+RUN apt-get install -y php-cli
+
+# Install Kernel 5 prerequisites
+RUN apt-get install -y python3-pip
+RUN pip3 install -U pip
+RUN pip3 install setuptools
+RUN apt-get install -y squashfs-tools
+
+# Install Redfish prerequisites
+RUN apt-get install curl
+WORKDIR /root
+RUN curl https://luajit.org/download/LuaJIT-2.0.5.tar.gz -o LuaJIT-2.0.5.tar.gz 
+RUN tar zxvf LuaJIT-2.0.5.tar.gz
+WORKDIR /root/LuaJIT-2.0.5
+RUN make && make install
+
+# Install Node.js and its Dependency Packages
+RUN curl –sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs
+
+# Installing Cppcheck
+RUN apt-get install -y cppcheck
+
+# Graphical Prompt for SVN Password
+RUN apt-get install ssh-askpass
+
+# make /bin/sh symlink to bash instead of dash
+RUN echo "dash dash/sh boolean false" | debconf-set-selections
+RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+
+# Installing VNC Prerequisites
+RUN apt-get install -y libtool
+
+# Installing GIT Prerequisites
+RUN apt-get install -y git
+RUN curl –s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+RUN apt-get install git-lfs
+RUN apt-get install -y python3-git
+RUN pip3 install numpy
+RUN pip3 install configParser
+
+# Installing Sentry Prerequisites
+RUN pip3 install sentry_sdk
+
+# Install MDS on Linux
+COPY ./13.0.1 /root/13.0.1
+RUN /root/13.0.1/Linux/mds-13.0.1-deb-x86_64.run
+
+# set python3 as default
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.6 2
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+
+# Avoid ascii errors when reading files in Python
+RUN apt-get install -y locales && locale-gen en_US.UTF-8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+RUN apt-get install -y bc \
+        rsync \
+        rename
+
+WORKDIR /workdir
+CMD ["MDS"]

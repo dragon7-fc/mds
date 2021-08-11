@@ -16,7 +16,10 @@ A MDS BMC build code environment.
     docker run --name mds --rm -e DISPLAY=host.docker.internal:0.0 -v [WORKDIR]:/workdir --workdir=/workdir dragon7/mds:4.0.1
     ```
 
-    __REFERENCE__: [Run GUI app in linux docker container on windows host](https://dev.to/darksmile92/run-gui-app-in-linux-docker-container-on-windows-host-4kde)
+    __REFERENCE__: 
+
+    * [Run GUI app in linux docker container on windows host](https://dev.to/darksmile92/run-gui-app-in-linux-docker-container-on-windows-host-4kde)
+    * [The complete WSL2 + GUI setup](https://medium.com/@japheth.yates/the-complete-wsl2-gui-setup-2582828f4577)
 - __Linux__:
 
     ```bash
