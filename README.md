@@ -36,10 +36,16 @@ A MDS BMC build code environment.
 
     brew install xquartz
 
-    docker run --name mds --rm -e DISPLAY=[IP_ADDRESS]:0 -v $HOME/.Xauthority:/root/.Xauthority --privileged dragon7/mds:4.0.1
+    docker run --name mds --rm -e DISPLAY=[IP_ADDRESS]:0 -v [WORKDIR]:/workdir --workdir=/workdir dragon7/mds:4.0.1
     ```
     __NOTE__: [IP_ADDRESS] should be changed to your valid IP address
 
+    or
+
+    ```bash
+    xhost + 127.0.0.1
+    docker run --name mds --rm -e DISPLAY=host.docker.internal:0 -v [WORKDIR]:/workdir --workdir=/workdir dragon7/mds:4.0.1
+    ```
     __REFERENCE__: [Running GUI’s with Docker on Mac OS X – Containerizers](https://cntnr.io/running-guis-with-docker-on-mac-os-x-a14df6a76efc)
 
 ## Command
