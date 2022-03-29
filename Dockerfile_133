@@ -1,0 +1,45 @@
+FROM ubuntu:18.04
+
+# Install python2 and python3
+RUN apt-get update
+RUN apt-get install -y python python3
+
+# Avoiding user interaction with tzdata
+ENV DEBIAN_FRONTEND=noninteractive 
+
+RUN apt install -y apt-utils sudo
+
+# make /bin/sh symlink to bash instead of dash
+RUN echo "dash dash/sh boolean false" | debconf-set-selections
+RUN dpkg-reconfigure dash
+
+# Install SPX prerequisites
+COPY ./13.3 /root/13.3
+RUN /root/13.3/Linux/pre-requisites.sh
+
+# Install Redfish prerequisites
+WORKDIR /root
+RUN apt-get install -y curl
+RUN curl https://luajit.org/download/LuaJIT-2.0.5.tar.gz -o LuaJIT-2.0.5.tar.gz 
+RUN tar zxvf LuaJIT-2.0.5.tar.gz
+WORKDIR /root/LuaJIT-2.0.5
+RUN make && make install
+
+# Installing Cppcheck
+RUN apt-get install -y cppcheck
+
+# Graphical Prompt for SVN Password
+RUN apt-get install ssh-askpass
+
+# Install MDS on Linux
+RUN /root/13.3/Linux/mds-13.3-deb-x86_64.run
+
+# Avoid ascii errors when reading files in Python
+RUN apt-get install -y locales && locale-gen en_US.UTF-8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+RUN apt-get install -y bc \
+        rsync
+
+
+CMD ["MDS"]
